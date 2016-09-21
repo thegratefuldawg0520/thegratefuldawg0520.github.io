@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>The Mobile Mapper - Archive</title>
+    <title>The Mobile Mapper - Motion Models</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -52,10 +52,10 @@
                         <a href="index.html">Home</a>
                     </li>
                     <li>
-                        <a href="about.html">About</a>
+                        <a href="archive.html">Archive</a>
                     </li>
                     <li>
-                        <a href="archive.html">Archive</a>
+                        <a href="post.html">Sample Post</a>
                     </li>
                     <li>
                         <a href="contact.html">Contact</a>
@@ -73,58 +73,35 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <div class="site-heading">
-                        <h1>Real-Time Mapping</h1>
-                        <hr class="small">
-                        <span class="subheading">Articles about Real-Time Mobile Mapping and Recursive State Estimation as it Applies to Modern Mapping Practices.</span>
+                    <div class="post-heading">
+                        <h1>Motion Models</h1>
+                        <h2 class="subheading">Kinematic motion models for Robot Pose States</h2>
+                        <span class="meta">Posted by <a href="#">Dennis Sherman</a> on September 21, 2016</span>
                     </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="post-preview">
-                    <a href="nonparametricFilters.html">
-                        <h2 class="post-title">
-                            Nonparametric Filters
-                        </h2>
-                        <h3 class="post-subtitle">
-                            Nonlinear and non-gaussian state estimation
-                        </h3>
-                    </a>
-                    <p class="post-meta">Posted by <a href="#">Dennis Sherman</a> on September 16, 2016</p>
+    <!-- Post Content -->
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <p>When the assumtions of Gaussianity and Linearity break down, popular techniques such as the Kalman Filter and the Extended Kalman Filter do not result in estimates of the posterior distribution of the state that are representative of the expectation of the distribution. Non-parametric filters are a class of filters that do not rely on any assumtions concerning the form of the posterior distribution and linearity within the system's behaviour. These techniques have shown great success in approximating multimodal distributions and can be adapted to suit the complexity and computational resouce demands of the problem.</p>
+                    <h2 class="section-heading">The Histogram Filter</h2>
+
+                    <p>The histogram filter decomposes the state space into finitely many regions and generates a probability estimate for each distinct region. This filter can be applied to both discrete and continuous state spaces.</p>
+
                 </div>
-                <hr>
-              <div class="post-preview">
-                    <a href="MotionModels.html">
-                        <h2 class="post-title">
-                            Motion Models
-                        </h2>
-                        <h3 class="post-subtitle">
-                            Kinematic motion models for Robot Pose States
-                        </h3>
-                    </a>
-                    <p class="post-meta">Posted by <a href="#">Dennis Sherman</a> on September 21, 2016</p>
-                </div>
-                <hr>
-                <!-- Pager -->
-                <ul class="pager">
-                    <li class="next">
-                        <a href="archive.html">Older Posts &rarr;</a>
-                    </li>
-                </ul>
             </div>
         </div>
-    </div>
+    </article>
 
     <hr>
 
     <!-- Footer -->
-    <footer>
+   <footer>
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">

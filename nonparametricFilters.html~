@@ -103,22 +103,26 @@
 
                     <p>In continuous state space, the histogram filter decomposes the state space into finitely many regions. Such a decomposition can be coarse or fine grained, depending on the magnitude of the acceptable approximation errors and the computational capacity of the system. The state of the system is then a piecewise approximation of the state at each region.</p>
                     
-                    <p>Continuous states can be decomposed statically, in which the state space is decomposed into a fixed form regardless of the estimated posterior distribution, or it can be decomposed dynamically, in which the state space is decomposed into a form that varies based upon the resources required to estimate the posterior distribution. Density trees, for instance, are a dynamic decomposition technique that generate coarse decompositions for regions in state space with low likelihoods, and fine decompositions for regions with higher likelihoods. Selective updating is another method of dynamically updating only a subset of the state space decomposition in which variation is likely to have occurred.</p>
+                    <p>Continuous states can be decomposed statically, in which the state space is decomposed into a fixed form regardless of the estimated posterior distribution, or it can be decomposed dynamically, in which the state space is decomposed into a form that varies based upon the resources required to estimate the posterior distribution. Density trees, for instance, are a dynamic decomposition technique that generate coarse decompositions for regions in state space with low likelihoods, and fine decompositions for regions with higher likelihoods. Selective updating is another method of dynamically updating only a subset of the state space decomposition in which variation is likely to have occurred. In this technique only a fraction of the prior estimates for the gridded state space is updated based upon a certain criteria, such as regions with a high posterior probability. The state space itself can be represented in a graph-like topological form, or in a gridded metric form.</p>
 
-                    <h2 class="section-heading">Reaching for the Stars</h2>
+                    <h2 class="section-heading">The Particle Filter</h2>
 
-                    <p>As we got further and further away, it [the Earth] diminished in size. Finally it shrank to the size of a marble, the most beautiful you can imagine. That beautiful, warm, living object looked so fragile, so delicate, that if you touched it with a finger it would crumble and fall apart. Seeing this has to change a man.</p>
-
-                    <a href="#">
-                        <img class="img-responsive" src="img/post-sample-image.jpg" alt="">
-                    </a>
-                    <span class="caption text-muted">To go places and do things that have never been done before – that’s what living is all about.</span>
-
-                    <p>Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no man has gone before.</p>
-
-                    <p>As I stand out here in the wonders of the unknown at Hadley, I sort of realize there’s a fundamental truth to our nature, Man must explore, and this is exploration at its greatest.</p>
-
-                    <p>Placeholder text by <a href="http://spaceipsum.com/">Space Ipsum</a>. Photographs by <a href="https://www.flickr.com/photos/nasacommons/">NASA on The Commons</a>.</p>
+                    <p>The Particle Filter is another nonparametric filter that can be used when no assumptions of linearity or gaussianity can be made. In this method, particles refer to randomly drawn samples from the posterior distribution generating a hypothesis of the true world state. It generates such samples recursively by sampling the prior distribution from the previous estimation epoch, and propagates the sample to the current estimation epoch using the system and measurement models. The particle filter works as follows:</p>
+                    
+                    	<ol>
+                    		<li>A hypothetical state is generated based upon the prior state and the control input for each particle.</li>
+                    		<li>An importance factor is generated based upon how well each hypothetical state fits the observations given the measurement model. This importance factor is then used to weight the hypothetical states</li>
+                    		<li>A resampling step occurs in which a new set of particles is drawn from the set of hypothetical states given the importance factor. This step allows the new set of particles to be focused around regions of the hypothetical distribution with a higher probability.</li>
+                    	</ol>
+                    	
+                    	<p>As the particle filter generates a state estimate based on an approximation of the target distribution, it suffers from several approximation errors:</p>
+							<ol>
+								<li>Due to the finite number of particles, when the resampling step occurs, and the weights are normalized to 1, reducing the degrees of freedom of the weights to one less than the number of particles used. This is because now the final weight becomes a function of 1 minus the sum of the other weights.</li>
+								<li>Random error is introduced due to the random nature of the resampling phase. This is also known as the variance of the estimator: when the variance of the particle set decreases, the variance with respect to the best estimate increases.</li>
+								<li>The divergence between the target distribution and the proposal distribution. Since the proposal distribution results after the system model step, and the target distribution, or the posterior distribution, is determined after the integration of new observations, this error can manifest when the system model is not well known and the sensor observations are very accurate</li>
+								<li>A fourth error is referred to as particle deprevation, or not having a sufficient number of particles to cover all relevant regions within the state space with a high likelihood of occurence. This can result in no particle being within the vicinity of the correct state.</li>
+							</ol>
+                   
                 </div>
             </div>
         </div>
