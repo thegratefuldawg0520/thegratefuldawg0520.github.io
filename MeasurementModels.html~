@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>The Mobile Mapper - Motion Models</title>
+    <title>The Mobile Mapper - Measurement Models</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -74,9 +74,9 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="post-heading">
-                        <h1>Motion Models</h1>
-                        <h2 class="subheading">Kinematic motion models for Robot Pose States</h2>
-                        <span class="meta">Posted by <a href="#">Dennis Sherman</a> on September 21, 2016</span>
+                        <h1>Measurement Models</h1>
+                        <h2 class="subheading">Sensor models for laser range finders</h2>
+                        <span class="meta">Posted by <a href="#">Dennis Sherman</a> on September 23, 2016</span>
                     </div>
                 </div>
             </div>
@@ -88,19 +88,12 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <p>A robot's state can be described in part by its motion model, also known as its state transition model. Kinematic motion models are those that describe the effect of actions on the configuration, or pose, of the robot. The pose may consist of 2D or 3D location and orientation relative to some coordinate system. The kinematic motion model then describes the conditional desity of the predicted state given the prior state and the kinematic controls.</p>
+                    <p>A robot's state can be described in part by its measurement, or sensor model, which dsescribes the relationship between noisy observations and the state estimate. A typical sensor model will be based upon assumptions of independence between the noise in each type of measurement, and independence between noise in measurements taken at different instances. Maps can be incorporated into the sensor models.</p>
                     
-                    <h2 class="section-heading">Velocity Motion Models</h2>
+                    <h2 class="section-heading">Map based Sensor Models</h2>
 
-                    <p>A velocity motion model assumes that controls occur through translational and rotational velocities. These models can be computed in a closed form using a technique such as kalman filtering, or can be computed based on sampling such a technique such as the particle filter. Typically, a 2D velocity based motion model will model forward velocity and change in orientation as control parameters, in addition to their random error terms. In order to prevent degeneracy of the state (estimating 2 parameters in a 3 parameter space), a third parameter is estimated which models a final rotation in the system.</p>
+                    <p>A map of an environment is a set of objects in the environment and their locations. Maps can be indexed in a feature-based manner or a location-based manner. Location based maps contain information about all points in space, including regions of free space. </p>
                     
-                    <h2 class="section-heading">Odometry Motion Models</h2>
-
-                    <p>An odometry based motion model assumes that controls can be simulated on the basis of odometry measurements from devices like shaft encoders and odometers. It has been demonstrated to be more accurate than velocity based motion models. In addition, if there were no explicit controls, and odometries were modeled as measurements, then the velocities of the robot would have to be parameterized as part of the state of the system to describe its motion within the transition model. The model itself makes use of the relative change between states to model the observed odometeries as controls. Similar to velocity models, these models can be estimated in both closed form and using sampling strategies, such as the kalman filter and particle filter respectively.</p>
-
-                    <h2 class="section-heading">Map Based Motion Models</h2>
-
-                    <p>A map of the environment the robot is navigating can provide additional information pertaining to regions the robot may or may not be able to navigate. Given the prior state and control command, the map can be used to determine the likelihood of the robot arriving at that location in the map (e.g. barriers, intraversability, etc...). </p>
                 </div>
             </div>
         </div>
