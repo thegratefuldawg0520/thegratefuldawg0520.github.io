@@ -92,8 +92,19 @@
                     
                     <h2 class="section-heading">Map based Sensor Models</h2>
 
-                    <p>A map of an environment is a set of objects in the environment and their locations. Maps can be indexed in a feature-based manner or a location-based manner. Location based maps contain information about all points in space, including regions of free space. </p>
+                    <p>A map of an environment is a set of objects in the environment and their locations. Maps can be indexed in a feature-based manner or a location-based manner. Location based maps contain information about all points in space, including regions of free space. This can be contrasted to feature based maps in which only the locations of objects within the environment is explicitly modelled. </p>
                     
+                    <h2 class="section-heading">Beam Models</h2>
+                    
+                    <p>Geometrically, a range sensor may be modelled as a beam or as a cone. In both cases, the models typically account for four types of measurement errors: small random measurement errors, errors due to unexpected objects, errors due to failures to detect objects, and random spurious data. A mixture model can be created that parameterize the different error sources within the context of a ray-casting model. In addition, the intrinsic parameters related to random measurement errors and errors in unexpected data are also estimated. Typically, the set of unknown error and intrinsic parameters are estimated using an expectation maximization algorithm which generates the estimates with the maximum likelihood of occurence. Numerous practical considerations must be accounted for, such as correlated noise between closely spaced measurements, a high number of measurements preventing real-time processing, and the suboptimal performance of the EM algorith.</p>
+                    
+                    <h2 class="section-heading">Likelihood Field Models</h2>
+                    
+                    <p>The beam model suffers from a lack of smoothness and high computational complexity due to its use of ray casting. One alternative to the physical beam based model is the likelihood model, which does not rely on a model of the sensor itself to incorporate the range based measurements into the map. In this model the end points of the scan are projected into the map coordinate system by generating the coordinate system transformation between the sensor's coordinate frame, the robot's coordinate frame and the map coordinate frame. This model assumes three different sources of uncertainty: random noise in the measurements, failing to detect objects and spurious 'outlier' type measurements. This method works well when the map is known to a reasonable degree of certainty, and performs poorly in regions of high uncertainty. In addition, it also suffers from the "see through walls" effect of not accounting for walls and objects that intersect the ray (due to no ray casting), and it fails to account for dynamic objects within the measurement field.</p>
+                    
+                    <h2 class="section-heading">Correlation-Based Models</h2>
+                    
+                    <p>Another popular technique for integrating range based measurements is matching the observed ranges to a map via correlation. </p>
                 </div>
             </div>
         </div>
