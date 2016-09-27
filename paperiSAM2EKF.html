@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>The Mobile Mapper - Archive</title>
+    <title>The Mobile Mapper - Paper Review: Incremental Smoothing vs. Filtering for Sensor Fusion on an Indoor UAV</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -52,10 +52,10 @@
                         <a href="index.html">Home</a>
                     </li>
                     <li>
-                        <a href="about.html">About</a>
+                        <a href="archive.html">Archive</a>
                     </li>
                     <li>
-                        <a href="archive.html">Archive</a>
+                        <a href="post.html">Sample Post</a>
                     </li>
                     <li>
                         <a href="contact.html">Contact</a>
@@ -73,70 +73,36 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <div class="site-heading">
-                        <h1>Real-Time Mapping</h1>
-                        <hr class="small">
-                        <span class="subheading">Articles about Real-Time Mobile Mapping and Recursive State Estimation as it Applies to Modern Mapping Practices.</span>
+                    <div class="post-heading">
+                        <h1>Paper Review: <i>Incremental Smoothing vs. Filtering for Sensor Fusion on an Indoor UAV</i></h1>
+                        <h2 class="subheading">Sven Lange, Niko Sunderhauf and Peter Protzel</h2>
+                        <span class="meta">Posted by <a href="#">Dennis Sherman</a> on September 27, 2016</span>
                     </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="post-preview">
-                    <a href="paperiSAM2EKF.html">
-                        <h2 class="post-title">
-                            Paper Review
-                        </h2>
-                        <h3 class="post-subtitle">
-                            Incremental Smoothing vs. Filtering for Sensor Fusion on an Indoor UAV
-                        </h3>
-                    </a>
-                    <p class="post-meta">Posted by <a href="#">Dennis Sherman</a> on September 27, 2016</p>
+    <!-- Post Content -->
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <p>This paper can be found <a href="https://www.tu-chemnitz.de/etit/proaut/rsrc/ICRA13-ISF.pdf">here</a></p>
+                    <p>This paper explores the implementation of the Incremental Smoothing and Mapping 2 (iSAM2) algorithm within the context of the platform stabilization and autonomous navigation problems. The algorithm was designed by the <a href="https://collab.cc.gatech.edu/borg/gtsam?destination=node%2F299">Borg Lab</a> using the Georgia Tech Smoothing and Mapping package (gtSAM). This paper demonstrates the use of the iSAM2 algorithm to fuse multirate asynchronous sensor data acquired by an AscTec Pelican platform running the AscTec autopilot and a programmable microcontroller running the asctec_mav_framework firmware and compares it to the same datasets being processed using an EKF in terms of the mean error with respect to ground truth data. This demonstration is carried out in two different contexts: a MATLAB Simulink based simulation and a live experiment using the real platform and motion tracking ground truth data. In this experiment indoor navigation and stabilization is performed resulting in the implementation of models for IMU, optical flow, range and compass.</p>
+                    
+                    <p>The majority of the paper details the different measurement and state transition models used to map the sensor readings to the current state estimate, and the relation between different state estimates, respectively. The EKF can be seen as a point estimator in which a prior state is transitioned into the current state using a constant turn rate and acceleration model, and the newly predicted state is corrected based on sensor data. This can be contrasted to th iSAM2 algorithm which can be viewed as an adaptive-lag smoother in which a subset of the states are optimized simultaneously based upon several epochs worth of measurements. Where as the recursive EKF uses a bayesian style filtering process, the iSAM2 algorithm uses a factor graph based implementation in which measurements are represented as factors, state estimates as nodes, the measurement models as the edges between an observation and its respective state estimate, and the state transition model between states.</p>
+                    
+                    <p>The results of the simulation and live experiment, with respect to the ground truth data, demonstate identical performance between the iSAM2 algorithm and the EKF when compared on the basis of the mean error. They concluded that delayed smoothing does demonstate improved results over the EKF and that tightly coupled iSAM2 implementations may also offer improvements.</p> 
                 </div>
-                <hr>
-              div class="post-preview">
-                    <a href="MeasurementModels.html">
-                        <h2 class="post-title">
-                            Measurement Models
-                        </h2>
-                        <h3 class="post-subtitle">
-                            Sensor models for laser range finders
-                        </h3>
-                    </a>
-                    <p class="post-meta">Posted by <a href="#">Dennis Sherman</a> on September 23, 2016</p>
-                </div>
-                <hr>
-              <div class="post-preview">
-                    <a href="MotionModels.html">
-                        <h2 class="post-title">
-                            Motion Models
-                        </h2>
-                        <h3 class="post-subtitle">
-                            Kinematic motion models for Robot Pose States
-                        </h3>
-                    </a>
-                    <p class="post-meta">Posted by <a href="#">Dennis Sherman</a> on September 21, 2016</p>
-                </div>
-                <hr>
-                <!-- Pager -->
-                <ul class="pager">
-                    <li class="next">
-                        <a href="archive.html">Older Posts &rarr;</a>
-                    </li>
-                </ul>
             </div>
         </div>
-    </div>
+    </article>
 
     <hr>
 
     <!-- Footer -->
-    <footer>
+   <footer>
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">

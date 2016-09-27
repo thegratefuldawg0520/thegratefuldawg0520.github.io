@@ -105,6 +105,10 @@
                     <h2 class="section-heading">Correlation-Based Models</h2>
                     
                     <p>Another popular technique for integrating range based measurements is matching the observed ranges to a map via correlation. This technique has the advantages of being computationally efficient and considers free space, at the expense of a lack of smoothness, as experienced with beam based models.</p>
+                    
+                    <h2 class="section-heading">Feature-Based Models</h2>
+                    
+                    <p>A feature extractor is a function that transforms a high dimensional measurement vector into a lower dimensional set of features that can distinguish objects in the environment. A feature extractor may generate a signature which allow such objects to be used as landmarks in the robot navigation problem. Thus the feature vector consists of a range, a bearing and a singature and it is conditioned on the state estimate and the map, while assumed to conditionally independent from other feature vectors. This allows for the generation of a feature based map in which each feature consists of a signature and a location coordinate.
                 </div>
             </div>
         </div>
