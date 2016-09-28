@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>The Mobile Mapper - Archive</title>
+    <title>The Mobile Mapper - Robot Localization</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -52,10 +52,10 @@
                         <a href="index.html">Home</a>
                     </li>
                     <li>
-                        <a href="about.html">About</a>
+                        <a href="archive.html">Archive</a>
                     </li>
                     <li>
-                        <a href="archive.html">Archive</a>
+                        <a href="post.html">Sample Post</a>
                     </li>
                     <li>
                         <a href="contact.html">Contact</a>
@@ -73,46 +73,36 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <div class="site-heading">
-                        <h1>Modern Mapping Theory and Practice</h1>
-                        <hr class="small">
-                        <span class="subheading">Articles about Land Surveying, Geodesy, GIS, Photogrammetry and Remote Sensing.</span>
+                    <div class="post-heading">
+                        <h1>Robot Localization</h1>
+                        <h2 class="subheading">Estimating variations in pose over time</h2>
+                        <span class="meta">Posted by <a href="#">Dennis Sherman</a> on September 27, 2016</span>
                     </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="post-preview">
-                    <a href="FirebaseMapping.html">
-                        <h2 class="post-title">
-                            Web Mapping 101
-                        </h2>
-                        <h3 class="post-subtitle">
-                            Using Google Maps and Firebase
-                        </h3>
-                    </a>
-                    <p class="post-meta">Posted by <a href="#">Start Bootstrap</a> on September 24, 2014</p>
+    <!-- Post Content -->
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <p>A robot's state can be described in part by its motion model, also known as its state transition model. Kinematic motion models are those that describe the effect of actions on the configuration, or pose, of the robot. The pose may consist of 2D or 3D location and orientation relative to some coordinate system. The kinematic motion model then describes the conditional desity of the predicted state given the prior state and the kinematic controls.</p>
+                    
+                    <h2 class="section-heading">Velocity Motion Models</h2>
+
+                    <p>A velocity motion model assumes that controls occur through translational and rotational velocities. These models can be computed in a closed form using a technique such as kalman filtering, or can be computed based on sampling such a technique such as the particle filter. Typically, a 2D velocity based motion model will model forward velocity and change in orientation as control parameters, in addition to their random error terms. In order to prevent degeneracy of the state (estimating 2 parameters in a 3 parameter space), a third parameter is estimated which models a final rotation in the system.</p>
+                    
                 </div>
-                <hr>
-                <!-- Pager -->
-                <ul class="pager">
-                    <li class="next">
-                        <a href="archive.html">Older Posts &rarr;</a>
-                    </li>
-                </ul>
             </div>
         </div>
-    </div>
+    </article>
 
     <hr>
 
     <!-- Footer -->
-    <footer>
+   <footer>
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
