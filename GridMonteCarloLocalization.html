@@ -105,7 +105,11 @@
 
                     <h2 class="section-heading">Grid Localization</h2>
 
-                    <p>Grid localization is performed by decomposing the pose space into a discrete grid over all valid poses. The granularity, or resolution, of the position and orientation estimates dictates the tradeoff between approximation precision and computational requirements. </p>
+                    <p>Grid localization is performed by decomposing the pose space into a discrete grid over all valid poses. The granularity, or resolution, of the position and orientation estimates dictates the tradeoff between approximation precision and computational requirements.</p>
+
+		<p>Grids can either be generated based upon a variable-resolution topological representation or they can be based upon a fixed-resolution grid. Care must be made when using coarse resolution approximations of the pose space when high resolution sensors (e.g. laser scanners) are used as their noise estimates may be far too low to reliably generate pose estimates at such a low resolution. This can be seen as another variable dictating the ideal resolution, in addition to the accuracy and run-time trade offs mentioned above.</p>
+
+		<p>At a certain level of granularity the algorithm can no longer be computed in real-time. In order to reduce the computational complexity numerous techniques can be applied: pre-computing statistics for each grid cell corresponding to the different sensor models, using only a subset of all available sensor data, performing geometric integration of several control commands prior to incorporating them into the estimation algorithm, and selectively updating only a fraction of the grid cells with a high likelihood of  it containing the robot.</p>
 
                 </div>
             </div>
