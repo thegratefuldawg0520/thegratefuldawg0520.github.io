@@ -75,7 +75,7 @@
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="post-heading">
                         <h1>Robot Localization</h1>
-                        <h2 class="subheading">Determing variations in pose over time</h2>
+                        <h2 class="subheading">Estimating variations in pose over time</h2>
                         <span class="meta">Posted by <a href="#">Dennis Sherman</a> on September 27, 2016</span>
                     </div>
                 </div>
@@ -88,12 +88,73 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <p>A robot's state can be described in part by its motion model, also known as its state transition model. Kinematic motion models are those that describe the effect of actions on the configuration, or pose, of the robot. The pose may consist of 2D or 3D location and orientation relative to some coordinate system. The kinematic motion model then describes the conditional desity of the predicted state given the prior state and the kinematic controls.</p>
+                    <p>Robot localization is the task of the determining the position and orientation of a platform relative to the coordinate system of some environment. Fundamentally, localization is a coordinate system transformation task, as it is the process of estimating the relative orientation between a coordinate system fixed to the body of the platform and the environment's coordinate system. As robot pose cannot be sensed directly, multiple different sensor measurements are typically combined to estimate the robot's pose within a given environment.</p>
                     
-                    <h2 class="section-heading">Velocity Motion Models</h2>
+                    <h2 class="section-heading">Different Localization Problems</h2>
 
-                    <p>A velocity motion model assumes that controls occur through translational and rotational velocities. These models can be computed in a closed form using a technique such as kalman filtering, or can be computed based on sampling such a technique such as the particle filter. Typically, a 2D velocity based motion model will model forward velocity and change in orientation as control parameters, in addition to their random error terms. In order to prevent degeneracy of the state (estimating 2 parameters in a 3 parameter space), a third parameter is estimated which models a final rotation in the system.</p>
-                    
+                    <p>Different types of localization problems exist, subject to the availability of prior knowledge, sensor data, the nature of the environment, and the environment localization is performed with respect to.</p>
+
+                    <p>The first distincition can be made between local and global localization problems, subject to the availability of initial data and incoming sensor data:
+	<ul>
+		<li>Position Tracking: Position tracking is the task of estimating the variation in pose over time subject to a known initial pose. It is local localization problem as the uncertainty is confined to a region near the robot's true pose. Gaussian noise models are typically sufficient to approximate the posterior distribution.</li>
+
+		<li>Global Localization: Global localization is the task of estimating the variation in pose over time subject to an unknown initial pose but a known map of the environment. No assumptions can be made regarding the boundness of the pose error, nor can any assumptions be made regarding the form of the posterior distribution.</li>
+
+		<li>Kidnapped Robot Problem: The kidnapped robot problem is the task of estimating the variation in pose over time subject to both an unknown initial condition and an unknown map of the environment. This problem can be seen as the case in which a global localization algorithm fails, and the solution to this problem is a measure of how well an algorithm can recover from such a failure in practice</li>
+
+	</ul>
+</p>
+
+<p>The next distinction can be made on the basis of a static or dynamic environment:
+
+	<ul>
+		<li>Static Environments: The only variations are the robot's pose over time, and all other objects remain stationary</li>
+		<li>Dynamic Environments: The location of objects in the environment other than the robot vary over time.</li>
+	</ul>
+</p>
+
+<p>Another distinction relates to whether the localization algorithm is integrated into the robot's control system, or if it simply observes the control commands:
+
+	<ul>
+		
+		<li>Passive Localization: The localization algorithm is not integrated directly into the control system, and observes the issued control commands.</li>
+
+		<li>Active Localization: Active localization algorithms are directly integrated into the robot's control system.</li>
+
+	</ul>
+
+Typically, active localization techniques yield more accurate results than passive methods.</p>
+
+<p>Localization can further be characterized on the basis of whether a single robot or multiple robots are used to estimate the pose of all robots simultaneously:
+
+	<ul>
+		<li>Single-Robot Localization: All data is collected by a single platform.</li>
+
+		<li>Multi-Robot Localization: Data is collected by multiple platforms, and the belief of one robot can be used to bias the belief of another robot when the relative location of the platforms is available, thereby increasing the accuracy of the overall pose estimates.</li>
+
+	</ul>
+
+		<h2 class="section-heading">Markov Localization</h2>
+		<p>Markov localization involves applying the Bayes filter to the localization problem. Markov localization transforms the belief state at epoch t-1 into the belief state at epoch t. This framework can be used to solve the tracking, global localization and kidnapped robot problem in a static enviornment. If an approximate initial pose is known, the algorithm is initialized with a narrow gaussian distribution centered around the belief state, whereas if the initial pose is unknown the algorithm is initialized with a uniform distribution over all valid poses within the environment.</p>
+
+		<h2 class="section-heading">EKF Localization</h2>
+		<p>EKF localization represents the belief state based upon the mean state vector and the covariance matrix of the state estimate, in other words the first and second moments of the posterior distribution. EKF localization assumes a feature based map. In addition, EKF localization processes multiple sensor measurements simultaneously assuming conditional independence between the different measurements themselves. Maximum likelihood estimation can be used ot generate an optimal estimate for the correspondence variables ???, however they suffer from divergence when an invalid hypothesis for a given track is accepted as the best estimate. This issue can be addressed by selecting landmarks that are sufficiently unique and sufficiently far apart, in addition to techniques to insure that hte robot's pose uncertainty remains small. Further, outlier rejection techniques and knowledge of the robot's approximate location can be used to reject highly improbably landmark observations.</p>
+
+		<p>One limitation to the EKF is that it suffers from divergence when an incorrect hypothesis is selected, as it assumes a single unimodal gaussian posterior distribution. The multi-hypothesis tracking algorithm is one strategy in which the posterior distribution is represented by a Gaussian mixture model, and each hypothesis within the mixture is itself a Gaussian posterior estimate of the state. These different hypothesis are assigned a scalar mixture weight used to combine them into a final state estimate at each epoch. In theory this algorithm is computationally intractable, however several strategies can be employed to render both the EKF and MHT more efficient:
+
+	<ul>
+		<li>Efficiently search methods for matching observed landmarks to those in the map</li>
+
+		<li>Mutual Exclusivity between different observations and different landmarks. In other words, different features observed at the same time cannot correspond to the same landmark in the environment</li>
+
+		<li>Outlier rejection strategies can also be used to increase the efficiency and robustness of the algorithm</li>
+
+	</ul>
+
+In practice the EKF and MHT are only applicable to the position tracking problem when the initial state is known due to linearization errors, the assumption of a unimodal posterior gaussian distribution. In addition, the EKF and MHT cannot process negative information, or the absence of features.
+
+</p>
+               
                 </div>
             </div>
         </div>
