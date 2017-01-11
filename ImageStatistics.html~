@@ -144,7 +144,7 @@ MathJax.Hub.Config({
                 		<p>The Mode of an image band consists of the most frequent digital number within the histogram. It is an alternative representation of the central tendancy of the distribution of digital numbers. The modal value for the first band of image $I$ is:</p>  
                 		
                 		$$mode = 150$$
-                		<script src="https://gist.github.com/thegratefuldawg0520/dbb759d42d9fc554f9bb141912e429e9.js"></script>
+                		<script src="https://gist.github.com/thegratefuldawg0520/ca6349bd5b9d1c227e76723a52f9fc6f.js"></script>
                 		
                 	<h1 class="section-heading">Covariance Matrix</h1>
                 	
