@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>The Mobile Mapper - Image Rectification</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Theme CSS -->
+    <link href="css/clean-blog.min.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <script type="text/javascript" async
+    	src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    Menu <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand" href="index.html">The Mobile Mapper</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li>
+                        <a href="about.html">About</a>
+                    </li>
+                    <li>
+                        <a href="archive.html">Archive</a>
+                    </li>
+                    <li>
+                        <a href="contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header class="intro-header" style="background-image: url('img/header.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Image Rectification</h1>
+                        <h2 class="subheading">Correcting for Geometric Distortion</h2>
+                        <span class="meta">Posted by <a href="#">Dennis Sherman</a> on January 12, 2017</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Post Content -->
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                	<h1 class="section-heading">Introduction</h1>
+                	<p>This lab consists of an exercise designed to explore the geometric correction of a multi-channel image via the process of image rectification. The goal of this lab is to investigate different polynomial methods for establishing the relationship between the image coordinate system and the ground coordinate system. As studied in photogrammetry, when imaging geometry is known, it is possible to impose conditions of collinearity to establish such a relationship. When imaging geometry is unknown, a less precise means of establishing this relationships is to model it with a polynomial equation.</p>
+                	
+                	<img src='img/Map.jpg' style="width:682px;height:645px;">
+                	
+                	<p>The polynomial model between image and ground coordinates can be established in one of two different ways: back projection and forward projection. Forwards projection solves for the coefficients of a polynomial model that transforms image coordinates into map coordinates. Backwards projection solves for the coefficients of a polynomial model that transforms ground coordinates into image coordinates. In this lab we will implement the backwards projection to investigate two elements of the polynomial image rectification process: the use of different order polynomials and the use of different interpolation methods for sampling digital numbers from the image given the map coordinates.</p>
+                	
+                	<img src='img/projections.jpg' style="width:800px;height:600px;">
+                	
+                	<p>The process of image rectification can be summarized in the following steps:
+                	<ol>
+                		<li>Select the polynomial model to estimate</li>
+                		<li>Establish a sufficient number of ground control points that exceeds the minimum number of GCP necessary to uniquely estimate all polynomial coefficients</li>
+                		<li>Estimate the coefficients of the polynomial transformation using the method of least squares</li>
+                		<li>Use the estimated polynomial model to sample digital numbers from the image given the ground coordinates of each pixel</li>
+                		<li>Generally, the polynomial model will not map exactly to the center of a pixel. As such, interpolation is performed in order to estimate the digital number of the ground coordinate pixel</li>
+                	</ol>
+                	</p>
+                	
+                	<h1 class="section-heading">Polynomial Models</h1>
+                	<p>We can express the back projection model in terms of the image coordinates and ground coordinates of the GCPs.</p>
+                	
+                	$$X,Y = Image\,Coordinates$$
+                	$$x,y = Ground\,Coordinates$$
+                	$$A_{i+j},B_{i+j} = Coefficients$$
+                	
+                	$$X = \sum_{i=0}^{m}\sum_{j=0}^{n}A_{i+j}x^{i}y^{j}$$
+                	$$Y = \sum_{i=0}^{m}\sum_{j=0}^{n}B_{i+j}x^{i}y^{j}$$
+                	
+                	</p>
+                	
+                	<p>The first order polynomial allows for translation along both axes, rotation, scaling and obliquity. The second order polynomial additionally allows for torsion and convexity transformation of the image. Higher order polynomials perform transformations that cannot be described in any physical sense. It is important to recognize that these polynomial functions do not reflect the imaging geometry, and hence cannot account for relief distortion.</p>
+                	<h1 class="section-heading">Ground Control Points</h1>
+                	<p>Ground Control Points should be collected in a planimetric system. It is possible to use software such as ArcMap or Google Earth Pro to perform such sampling. Google Earth Pro can be downloaded for free <a href="https://www.google.com/earth/explore/products/desktop.html">here</a>.</p>
+                	<h1 class="section-heading">Least-Squares Coefficient Estimation</h1>
+                	<p>The Unweighted Parametric Least-Squares Adjustment can be used to estimate the polynomial coefficients. In this case, the coefficients are a linear function of the ground coordinates, and the image coordinates constitute the observations, allowing the formation of observation equations. This can be expressed as:
+                	$$A\hat{x} - l = \hat{v}$$
+                	$$A = Design\,Matrix$$
+                	$$\hat{x} = Least\,Squares\,Estimator\,of\,the\,Parameters\,x$$
+                	$$l = Vector\,of\,image\,coordinate\,observations$$
+                	$$\hat{v} = Vector\,of\,Residuals$$
+                	
+                	The Least-Squares Estimator $\hat{x}$ of $x$ is computed as
+                	
+                	$$\hat{x} = (A^{T}A)^{-1}A^{T}l$$
+                	$$(A^{T}A)^{-1} = Normal\,Equations$$
+                	
+                	One issue that arises is the numerical stability of the normal equations due to the large values of the ground coordinate components. This can result in an ill-conditioned system of normal equations. Numerous techniques exist to circumvent this issue, the simplest of which is to translate the ground coordinates to the centriod of the ground control points, estimate the polynomial coefficients, compute the resampled map, and then translate the coordinates of the final map's pixels back.                	
+                	</p>
+                	
+                	<h1 class="section-heading">Resample</h1>
+                	<p>Once the polynomial coefficients have been estimated, the next step involves sampling the image by backprojecting each pixel in the ground coordinate system to its associated coordinates in the image system. In this case a blank raster containing no data values is allocated to store the pixel values for each location. Since the backprojected ground coordinate will not coincide exactly with the center of the image pixel coordinates, interpolation is required to estimate the value of the new raster's pixel.</p>
+                	<h1 class="section-heading">Interpolate</h1>
+                	<p>In this lab, the pixel values will be interpolated using one of two different methods: nearest neighbour interpolation and bilinear interpolation.</p>
+                	<p>Nearest neighbour interpolation involves assigning the digital number of the closest pixel that the backprojection function maps to. Bilinear interpolation can be computed as follows for a point within the neighbourhood of 4 pixels. First we perform linear interpolation in the x direction:
+                	
+                	$$DN(x,y_{1}) = \frac{x_{2}-x}{x_{2}-x_{1}}DN(x_{1},y_{1}) + \frac{x-x_{1}}{x_{2}-x_{1}}DN(x_{2},y_{1})$$
+                	$$DN(x,y_{2}) = \frac{x_{2}-x}{x_{2}-x_{1}}DN(x_{1},y_{2}) + \frac{x-x_{1}}{x_{2}-x_{1}}DN(x_{2},y_{2})$$
+                	
+                	Second, we perform linear interpolation in the y direction:
+                	
+                	$$DN(x,y) = \frac{y_{2}-y}{y_{2}-y_{1}}DN(x,y_{1}) + \frac{y-y_{1}}{y_{2}-y_{1}}DN(x,y_{2})$$
+                	</p>	
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+
+    <!-- Footer -->
+   <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                        <li>
+                            <a href="https://www.linkedin.com/in/dennis-sherman-163638a3">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.youtube.com/channel/UCooV7bmnzqZkkgY3YEn6z6g">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-youtube fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/thegratefuldawg0520">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                    <p class="copyright text-muted">Copyright &copy; Your Website 2016</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Contact Form JavaScript -->
+    <script src="js/jqBootstrapValidation.js"></script>
+    <script src="js/contact_me.js"></script>
+
+    <!-- Theme JavaScript -->
+    <script src="js/clean-blog.min.js"></script>
+
+</body>
+
+</html>
