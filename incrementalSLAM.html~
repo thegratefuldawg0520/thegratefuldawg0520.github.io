@@ -22,6 +22,16 @@
     <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 
+    <script type="text/javascript" async
+    	src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -76,7 +86,7 @@
                     <div class="post-heading">
                         <h1>SLAM</h1>
                         <h2 class="subheading">Simultaneous Localization and Mapping</h2>
-                        <span class="meta">Posted by <a href="#">Dennis Sherman</a> on January 9, 2017</span>
+                        <span class="meta">Posted by <a href="#">Dennis Sherman</a> on January 2, 2017</span>
                     </div>
                 </div>
             </div>
@@ -93,17 +103,182 @@
                     
                     <p>Within the context of both SLAM problems, one major task is to estimate a feature based map of the environment under observation. A feature based map consists of a set of geometric primitives (e.g. points, lines, polygons) and an associated descriptor that is meant to uniquely characterize the primitive allowing it to be distinguished from other primitives within the map. The locations of these observed geometric primatives can be related to the pose of one or more cameras via the imposition of conditions of collinearity or coplanarity, affording the ability to simultaneously localize and map. The full parameterization of this problem is referred to as the combined state vector, and is typically modelled as a non-linear system with gaussian noise.</p>
                     
+                    <h2 class="section-heading">Recursive State Estimation</h2>
+                    
+                    <p>The process of simultaneously estimating a map of a given environment and the kinematic state of a mobile platform located within the environment can be modelled recursively. This process computes these estimates of state as a function of all prior state estimates of the platform, any inputs that control the motion of the platform, and sensor based observations of the environment. The prior states, the control inputs, and the sensor observations, are all estimated along with an associated measure of uncertainty. The challenge in performing recursive estimates of the platform's state and its mapping of an environment involves the means through which uncertainties are modelled and minimized.</p>
+                    
+                    <p>Typically in recursive state estimation one makes the Markov Assumption: that the future state of the system depends only upon the current state of the system, the next control command, the next set of sensor observations, and is conditionally independent of all other prior states, controls and observations. Thus one can use this assumption, in addition to probabilistic laws, to define probabilistic models that can generate recursive state estimates. The conditional relationship between the predicted future state given the current state and next control command can be modelled as:
+                    
+                    $$p(x_{t}|x_{0:t},z_{1:t-1},u_{1:t}) = p(x_{t}|x_{t-1},u_{t})$$
+                    
+                    Similarly, one can model the conditional relationship between the sensor observations given the predicted state as:
+                    
+                    $$p(z_{t}|x_{0:t},z_{1:t-1},u_{1:t}) = p(z_{t}|x_{t})$$
+                    
+                    The resulting models are referred to as the state transition probability and the measurement probability respectively. The two models can be used in combination to perform a recursive procedure in which the prediction of the uncertain future state is computed using the state transition model, and the prediction is then refined by estimating the state given the measurement model. Numerous techniques integrate deterministic and stochastic models into both the state transition model and the measurement model. Such recursive estimation techniques, as applied to the simultaneous localization and mapping problem, is the focus of this article</p> 
+                    </p> 
+                                        
+                    <h2 class="section-heading">Gaussian Filters</h2>
+                    
+                    A multi-variate Gaussian Distribution can be modelled as:
+                    
+                     $$p(x) = det(2\pi\Sigma)^{-\frac{1}{2}}exp[-\frac{1}{2}(x-\mu)^{T}\Sigma^{-1}(x-\mu)]$$
+                     
+                    Where $x$ is the state vector, $\mu$ is the mean state, and $\Sigma$ is the state covariance matrix. This is referred to as a moments based representation of the system state. The most common algorithm for linear recursive estimation is the Kalman Filter.</p> 
+                    
+                    <h2 class="section-heading">The Kalman Filter</h2>
+                    
+                    <p>The Kalman Filter models the state transition as:
+                    
+                    $$x_{t} = A_{t}x_{t-1} + B_{t}u_{t} + \epsilon_{t}$$
+                    
+                    Where $A$ is the State Transition Matrix, $B$ is the Control Transition Matrix and $\epsilon$ is the noise term that models the Gaussian Uncertainties in the combined state estimate and control commands. The state transition probability can be modelled as:
+                    
+                    $$p(x_{t}|u_{t},x_{t-1}) = det(2\pi R_{t})^{-\frac{1}{2}}exp[-\frac{1}{2}(x_{t}-A_{t}x_{t-1}-B_{t}u_{t})^{T}R_{t}^{-1}(x_{t}-A_{t}x_{t-1}-B_{t}u_{t})]$$
+                    
+                    In this case $R$ is the State Transition Covariance Matrix. In a similar manner, the Kalman Filter models the sensor measurements as:
+                    
+                    $$z_{t} = C_{t}x_{t} + \delta_{t}$$
+                    
+                    Where $C$ is the Measurement Matrix and $\delta$ is the noise term that models the Gaussian uncertainties in the measurements. The measurement probability can be modelled as:
+                    
+                    $$p(z_{t}|x_{t}) = det(2\pi Q_{t})^{-\frac{1}{2}}exp[-\frac{1}{2}(z_{t}-C_{t}x_{t})^{T}Q_{t}^{-1}(z_{t}-C_{t}x_{t})]$$
+                    
+                    Finally, it is important to define the initial state of the platform $x_{0}$ and the initial covariance $\Sigma_{0}$ characterized, once again, by Gaussian Uncertainties as follows:
+                    
+                    $$p(x_{0}) = det(2\pi\Sigma_{0})^{-\frac{1}{2}}exp[-\frac{1}{2}(x_{0}-\mu_{0})^{T}\Sigma_{0}^{-1}(x_{0}-\mu_{0})]$$
+                    
+                    The Kalman Filter can be computed using the following algorithm:
+                    
+                    $$\bar{\mu}_{t} = A_{t}\mu_{t-1} + B_{t}u_{t}$$
+                    $$\bar{\Sigma}_{t} = A_{t}\Sigma_{t-1}A^{T}_{t} + R_{t}$$                    
+                    $$K_{t} = \bar{\Sigma}_{t}C_{t}^{T}(C_{t}\bar{\Sigma}_{t}C_{t}^{T} + Q_{t})^{-1}$$
+                    $$\mu_{t} = \bar{\mu}_{t} + K_{t}(z_{t} - C_{t}\bar{\mu}_{t})$$
+                    $$\Sigma_{t} = (I - K_{t}C_{t})\bar{\Sigma}_{t}$$
+                    
+                    Given the algorithm above, one may notice the variable $K$, referred to as the Kalman Gain. The Kalman Gain can be seen as a correction applied to the predicted state based upon the sensor measurements. It determines how much of an influence the measurements will have on refining the predicted state to generate the final state estimate for the given estimation epoch. It is important to recognize that this step in the algorithm involves the inversion of the predicted state covariance matrix and the process covariance matrix, which can be a costly operation given a high dimensional system.</p>
+                    
+                    <p>Unfortunately, the Kalman filter relies on 3 important assumptions that are often violated in practice:
+                    <ol>
+                    <li>Unimodality</li>
+                    <li>Gaussianity</li>
+                    <li>Linearity</li>
+                    </ol>
+                    
+                    The remainder of this article focuses on different filtering techniques designed to handle the violation of one or more of these assumptions in practice.
+                    </p>
+                    
+                    <h2 class="section-heading">The Extended Kalman Filter</h2>
+                    <p>The Extended Kalman Filter is a variation of the Kalman Filter for handling violation of the linearity assumption when faced with a non-linear State Transition model or a non-linear Measurement Model. This is often the case in mobile mapping, as traditional kinematic and sensor models are typically non-linear. The non-linear state transition model $g$ and measurement model $h$ can be expressed as:
+                    
+                    $$x_{t} = g(u_{t},x_{t-1}) + \epsilon_{t}$$
+                    $$z_{t} = h(x_{t}) + \delta_{t}$$
+
+		    In this case the state solution is not an exact solution, but an apprioximation that is achieved by transforming the models from a non-linear representation into a linear representation via the process of linearization. Additionally, when a Gaussian State Estimate is propagated into its future state through a non-linear model, the resulting uncertainties within the estimate are no longer Gaussian. Linearization approximates the functional models by computing a linear approximation that is tangent to the function at the mean of the assumed Gaussian distribution, resulting in a Gaussian posterior distribution. Thus the Extended Kalman Filter handles models that are non-linear and potentially non-gaussian via the process of linearization.</p>
+
+                    <p>When computing state estimates based upon non-linear models with an EKF, a first-order Taylor Expansion is used to linearize the functions. The linearized forms of the state transition model and measurement model are expressed as:
+                    
+                    $$g(u_{t},x_{t-1}) \approx g(u_{t},\mu_{t-1}) + g'(u_{t},\mu_{t-1})(x_{t-1} - \mu_{t-1})$$
+                    $$ = g(u_{t},\mu_{t-1}) + G_{t}(x_{t-1} - \mu_{t-1})$$
+                    $$h(x_{t}) \approx h(\bar{\mu_{t}}) + h'(\bar{\mu}_{t})(x_{t}-\bar{\mu}_{t})$$
+                    $$ = h(\bar{\mu_{t}}) + H_{t}(x_{t}-\bar{\mu}_{t})$$
+                    
+                    The Extended Kalman Filter is then computed using the following algorithm:
+                    
+                    $$\bar{\mu}_{t} = g(u_{t},\mu_{t-1})$$
+                    $$\bar{\Sigma}_{t} = G_{t}\Sigma_{t-1}G^{T}_{t} + R_{t}$$                    
+                    $$K_{t} = \bar{\Sigma}_{t}H_{t}^{T}(H_{t}\bar{\Sigma}_{t}H_{t}^{T} + Q_{t})^{-1}$$
+                    $$\mu_{t} = \bar{\mu}_{t} + K_{t}(z_{t} - h_{t}\bar{\mu}_{t})$$
+                    $$\Sigma_{t} = (I - K_{t}H_{t})\bar{\Sigma}_{t}$$
+                    </p>
+                    
+                    <h2 class="section-heading">The Information Filter</h2>
+                    
+                    <p>In contrast to the Kalman Filter, which represents the moments form of the Gaussian Filter, the Information Filter represents the Canonical form of the Gaussian Filter. The information filter is expressed in terms of the Information Matrix $\Omega$ and the Information Vector $\xi$. It is related to the State Vector $\mu$ and the State Covariance Matrix $\Sigma$ as:
+                    
+                    $$\Omega = \Sigma^{-1}$$
+                    $$\xi = \Sigma^{-1}\mu$$
+                    
+                    Similarly, the State Covariance Matrix and State Vector can be recovered from the Canonical representation as:
+                    
+                    $$\Sigma = \Omega^{-1}$$
+                    $$\mu = \Omega^{-1}\xi$$
+                    
+                    The Multivariate Gaussian Distribution can be expressed in terms of its Canonical form as:
+                    
+                    $$p(x) = \eta exp(-\frac{1}{2}x^{T}\Omega x + x^{T}\xi)$$
+                    
+                    The negative logarithm of the Canonical Gaussian is another important form of the probability model:
+                    
+                    $$-logp(x) = const + \frac{1}{2}x^{T}\Omega x - x^{T}\xi$$
+                    
+                    The Information Filter algorithm assumes that the state transition matrix model and the measurement model are the same linear model used in the Kalman Filter, and the same noise processes exist in those models. The information filter is computed using the following algorithm:
+                    
+                    $$\bar{\Omega}_{t} = (A_{t}\Omega_{t-1}A^{T}_{t} + R_{t})^{-1}$$ 
+                    $$\bar{\xi}_{t} = \bar{\Omega}_{t}(A_{t}\Omega_{t-1}^{-1}\xi_{t-1} + B_{t}u_{t})$$
+                    $$\Omega_{t} = C_{t}^{T}Q_{t}^{-1}C_{t} + \bar{\Omega}_{t}$$
+                    $$\xi_{t} = C_{t}^{T}Q_{t}^{-1}z_{t} + \bar{\xi}_{t}$$
+                    
+                    One major difference between using the Information Filter in contrast to the Kalman Filter is the computationally intensive step resulting from Matrix inversion. In the Kalman Filter, the prediction stage involves matrix addition where as in the Information Filter it involves 2 matrix inversions. The measurement stage, in turn, involves matrix inversion for the Kalman Filter, and matrix addition for the Information Filter.</p>
+                    
+                    <h2 class="section-heading">The Extended Information Filter</h2>
+                    <p>Similar to the case of the Extended Kalman Filter, the Extended Information Filter is an extension of the Information Filter for the case where the assumptions of linearity, and thus Gaussianity, are violated. Identical to the EKF, the EIF is designed to handle non-linear state transition and measurement models. The EIF algorithm is outlined as follows:
+                    
+                    $$\mu_{t-1} = \Omega^{-1}_{t-1}\xi_{t-1}$$
+                    $$\bar{\Omega}_{t} = (G_{t}\Omega_{t-1}G^{T}_{t} + R_{t})^{-1}$$ 
+                    $$\bar{\xi}_{t} = \bar{\Omega}_{t}g(u_{t},\mu_{t-1})$$
+                    $$\bar{\mu}_{t} = g(u_{t},\mu_{t-1})$$
+                    $$\Omega_{t} = H_{t}^{T}Q_{t}^{-1}H_{t} + \bar{\Omega}_{t}$$
+                    $$\xi_{t} = H_{t}^{T}Q_{t}^{-1}[z_{t}-h(\bar{\mu}_{t})-H_{t}\bar{\mu}_{t}] + \bar{\xi}_{t}$$
+                    
+                    Given that the state transition and measurement models are non-linear, linearization is once again performed to transform the non-linear function into a linear approximation that can produce a Gaussian Posterior state estimate. It is a consequence of this linearization, performed within the state space, that requires the recovery of the state vector at each iteration of the algorithm. Within the context of SLAM, there are multiple benefits to the information filter when compared to the Kalman Filter:
+                    
+                    <ol>
+                    <li>The ability to represent global uniform uncertainty by setting the Information Matrix to the Zero Matrix</li>
+                    <li>The Information Filter often attains greater numerical stability than the Kalman Filter in practice</li>
+                    <li>The Integration of sensor data from multiple platforms, when presented in the log likelihood form of the information filter, can be performed as an addition of the information from each platform</li>
+                    </ol>
+                    
+                    These benefits, however, can be contrasted to the shortcomings of the information filter when contrasted to the Kalman Filter:
+                    
+                    <ol>
+                    <li>The need to recover the state estimate at each estimation epoch in the Extended Information Filter</li>
+                    <li>The need to perform matrix inversion in both the recovery of the state vector for linearization, and the predictive step of the filter. This can be an issue for high dimensional state spaces</li>
+                    </ol>
+                    
+                    The real value in the Information Filter, and the Extended Information Filter, is that when the Information Matrix is structured appropriately, it can often occur as a sparse matrix, while the equivalent covariance matrix is fully populated. Such sparseness can be modelled within a graph structure, as a Gaussian Markov Random Field, which allows the use of numerous efficient algorithms for computing the posterior state estimate.
+                    </p>
+                    
+                    <h2 class="section-heading">Online SLAM</h2>
+                    
+                    <p>
+                    The purpose of simultaneous localization and mapping is to map an unknown environment while simultaneously determining the position and orientation of the mapping platform within the map. One variant of this problem is known as online SLAM in which the state estimate consists of the current epoch's pose along with the map. This can be computed incrementally in terms of the posterior probability of the estimated state and map as:
+                    
+                    $$p(x_{t},m|z_{1:t},u_{1:t})$$
+                    
+                    The Extended Kalman Filter is one of the most common implementations of the online
+                    </p>
                     <h2 class="section-heading">EKF SLAM</h2>
 
-                    <p>The Extended Kalman Filter is the classical method of Online SLAM which provides a moments based representation of the SLAM problem in terms of the state vector and state covariance matrix. The goal of EKF SLAM is to simultaneously estimate the camera pose at each epoch in addition to a growing map of observed feature based landmark locations. Initially, as only a small number of features are observed, the complexity of the problem is relatively small. As the number of observed features in the map grows, so too does the number of features modelled within the combined state vector and state covariance matrix, increasing the computational complexity of the algorithm. Additionally, the fully populated structure of the state covariance matrix results in a fully populated Kalman Gain eliminating the ability to use sparse linear algebra techniques to expedite the computations. Finally, as each state estimate is recursively dependant upon the prior estimate, divergence between the estimated value and the expected value of the state diverges over time due to linearization errors, initialization point, outlier observations, approximate nature of the linearization point, and violations of the gaussian assumption regarding the form posterior distribution of the state estimate.</p>
+                    <p>The Extended Kalman Filter is the classical method of Online SLAM which provides a moments based representation of the SLAM problem in terms of the state vector and state covariance matrix. The goal of EKF SLAM is to simultaneously generate the maximum likelihood point estimate for the camera pose at each epoch in addition to a growing map of observed feature based landmark locations. Initially, as only a small number of features are observed, the complexity of the problem is relatively small. As the number of observed features in the map grows, so too does the number of features modelled within the combined state vector and state covariance matrix, increasing the computational complexity of the algorithm. Additionally, the fully populated structure of the state covariance matrix results in a fully populated Kalman Gain eliminating the ability to use sparse linear algebra techniques to expedite the computations.</p> 
+                    
+                    <p><img src='img/EKFCov.jpg' style="width:400px;height:600px;" align="center"></p>
+                    
+                    <p>Finally, as each state estimate is recursively dependant upon the prior estimate, divergence between the estimated value and the expected value of the state diverges over time due to linearization errors, initialization point, outlier observations, approximate nature of the linearization point, and violations of the gaussian assumption regarding the form posterior distribution of the state estimate. Other complexities within the estimation process, such as incorrect landmark matching between image frames, </p>
                     
                     <h2 class="section-heading">EIF SLAM</h2>
                     
-                    <p>The Extended Information Filter is a duality of the EKF. It provides a canonical representation of the state of the system in terms of the information vector and information matrix. Unlike the EKF, which is suited to solving the online SLAM problem, the EIF is better suited to solving the full SLAM problem. Further, the sparse band-diagonal form of the information matrix allows for sparse linear algebra techniques to be applied to its efficient inversion. As the information vector and information matrix are dualities of the state vector and covariance matrix, it is possible to transform between the moments representation and the canonical representation of the system, allowing for computations to be carried out in the information space, while generating solutions in terms of the state space parameterization. In practice it can be computationally difficult to recover the full covariance matrix from the information matrix, thus instead it is possible to recover marginal covariances related to each of the individual localization and mapping estimates</p>                  
+                    <p>The Extended Information Filter is a duality of the EKF. It provides a canonical representation of the state of the system in terms of the information vector and information matrix. Unlike the EKF, which is suited to solving the online SLAM problem, the EIF is only capable of solving the full SLAM problem as it computes the posterior distribution of the entire map and robot trajectory at each estimation epoch. The main benefits of the extended information filter relate to the availability of all data and prior estimates at each estimation epoch, allowing for improved linearization, data association, and lower incidence of estimates diverging from their expected value, when compared to the EKF. Additionally, it can handle issues such as erroneous feature matching, higher uncertainties in motion, and larger maps than the EKF. </p>
+                    
+                    <p>Within the EIF, the relationship between successive state estimates and control commands can be thought of constraints between two successive states, where the uncertainty inherent in this constraint is modelled in the information matrix. Similarly, observations to landmarks performed at a given estimation epoch can be thought of as a constraint between that epoch's pose and the observed landmark, as modelled in the information matrix. In both cases, the less noisy, and the more certain, a control or measurement is, the larger the value added to the information matrix. Sparsity in the information matrix naturally occurs as off diagonal elements that are non-zero occur with the exception of these control commands mapping successive poses, and landmarks observed at a given estimation epoch. This is the real power in the Extended Information Filter: the use of sparse techniques for matrix inversion, and its ability to expedite computations for large maps.</p>
+                    
+                    <p><img src='img/EIF.jpg' style="width:600px;height:200px;" align="center"></p>
+                    
+                    <p>One challenge to the use of traditional sparse matrix methods inherent in the SLAM problem related to the large time delay in which the same feature is observed due to the cyclical nature of many environments, and how that is encoded in the information matrix. This can be resolved by incorporating a factorization trick for variable elimination in which </p>                  
                     
                     <h2 class="section-heading">Sparse Extended Information Filter</h2>
                     
-                    <p>The Sparse Extended Information Filter is an augmented version of the EIF that allows for online estimation of the SLAM problem while simultaneously taking advantage of the sparsity of the information matrix. </p>
+                    <p>The Sparse Extended Information Filter is an augmented version of the EIF that allows for online estimation of the SLAM problem while simultaneously taking advantage of the sparsity of the information matrix. Within the information </p>
                 </div>
             </div>
         </div>

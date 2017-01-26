@@ -105,7 +105,7 @@ MathJax.Hub.Config({
                 	
                 	<p>The polynomial model between image and ground coordinates can be established in one of two different ways: back projection and forward projection. Forwards projection solves for the coefficients of a polynomial model that transforms image coordinates into map coordinates. Backwards projection solves for the coefficients of a polynomial model that transforms ground coordinates into image coordinates. In this lab we will implement the backwards projection to investigate two elements of the polynomial image rectification process: the use of different order polynomials and the use of different interpolation methods for sampling digital numbers from the image given the map coordinates.</p>
                 	
-                	<img src='img/projections.jpg' style="width:800px;height:600px;">
+                	<img src='img/projections.jpg' style="width:700px;height:350px;">
                 	
                 	<p>The process of image rectification can be summarized in the following steps:
                 	<ol>
@@ -124,8 +124,8 @@ MathJax.Hub.Config({
                 	$$x,y = Ground\,Coordinates$$
                 	$$A_{i+j},B_{i+j} = Coefficients$$
                 	
-                	$$X = \sum_{i=0}^{m}\sum_{j=0}^{n}A_{i+j}x^{i}y^{j}$$
-                	$$Y = \sum_{i=0}^{m}\sum_{j=0}^{n}B_{i+j}x^{i}y^{j}$$
+                	$$X = \sum_{i=0}^{m}\sum_{j=0}^{n - i}A_{i+j}x^{i}y^{j}$$
+                	$$Y = \sum_{i=0}^{m}\sum_{j=0}^{n - i}B_{i+j}x^{i}y^{j}$$
                 	
                 	</p>
                 	

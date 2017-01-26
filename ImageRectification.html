@@ -124,8 +124,8 @@ MathJax.Hub.Config({
                 	$$x,y = Ground\,Coordinates$$
                 	$$A_{i+j},B_{i+j} = Coefficients$$
                 	
-                	$$X = \sum_{i=0}^{m}\sum_{j=0}^{n}A_{i+j}x^{i}y^{j}$$
-                	$$Y = \sum_{i=0}^{m}\sum_{j=0}^{n}B_{i+j}x^{i}y^{j}$$
+                	$$X = \sum_{i=0}^{m}\sum_{j=0}^{n - i}A_{i+j}x^{i}y^{j}$$
+                	$$Y = \sum_{i=0}^{m}\sum_{j=0}^{n - i}B_{i+j}x^{i}y^{j}$$
                 	
                 	</p>
                 	
