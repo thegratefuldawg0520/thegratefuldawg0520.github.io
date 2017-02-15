@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>The Mobile Mapper - Supervised Classification</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Theme CSS -->
+    <link href="css/clean-blog.min.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <script type="text/javascript" async
+    	src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    Menu <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand" href="index.html">The Mobile Mapper</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li>
+                        <a href="about.html">About</a>
+                    </li>
+                    <li>
+                        <a href="archive.html">Archive</a>
+                    </li>
+                    <li>
+                        <a href="contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header class="intro-header" style="background-image: url('img/header.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Supervised Classification</h1>
+                        <h2 class="subheading">Categorizing Land Coverage in Remotely Sensed Images</h2>
+                        <span class="meta">Posted by <a href="#">Dennis Sherman</a> on February 14, 2017</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Post Content -->
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                	<h1 class="section-heading">Introduction</h1>
+                	<p>This lab involves the use of Supervised Classification to categorize pixels in a remotely sensed image into different land coverage classes (e.g. roads, grasses, buildings, etc...). The lab is split into three different components:
+                	
+                	<ol>
+                	<li>The selection of training data.</li>
+                	<li>Classification using PCI Geomatics</li>
+                	<li>Implementation of Classification software</li>
+                	</ol>
+                	
+                	</p>
+                	
+                	<h1 class="section-heading">Supervised Classification</h1>
+                	<p>Supervised classification involves the categorization of all pixels in an image into different classes given estimates of the probability distribution of each class. Given a multi-spectral image, the resulting estimates are multi-variate and are often referred to as the spectral signature of the class. Supervised classification, in contrast to unsupervised classification, splits the classification process into two distinct, mutually exclusive, phases:
+                	<ol>
+                	<li>Training Data Selection: Samples from each class are used to characterize the spectral signature by estimating the mean vector and covariance matrix. The selection of sample sites is performed by a person and requires careful selection in order to appropriately characterize the spectral signature of a given class, while maintaining sufficient separability between the spectra of different classes</li>
+                	<li>Classification: The training data is then used to determine, on a pixel-wise basis, the best-fit class given some optimal decision rule. In this lab, the maximum likelihood and minimum distance decision rules will be explored.</li>
+                	</ol>
+                	</p>
+                	
+                	<p>Maximum likelihood classification assumes the spectral signature of each class follows a normal distribution. The log-likelihood form of the multi-variate normal distribution, in addition to Bayes Rule, is used to generate a discriminant function that can be used along with a decision rule for classifying image pixels given an estimated spectral signature.</p>
+                	
+                	<p>The discriminant function for maximum likelihood classification is defined as:
+                	
+                	$$g_{k}(x) = -ln|C_{k}| - (x - \bar{m}_{k})^{T}C_{k}^{-1}(x - \bar{m}_{k})$$
+                	</p>
+                	
+                	<p>The decision rule for maximum likelihood classification is defined as:
+                	
+                	$$x \implies \omega_{i} \text{ if } g_{i}(x)>g_{j}(x), \forall j \neq i$$
+                	
+                	</p>
+                	
+                	<p>In contrast to maximum likelihood classification, minimum distance classification makes no assumptions regarding the second moment of each class. The descriminant function can be derived from the maximum likelihood discriminant function by assuming the covariance matrix for each spectra is equal to the identity matrix, eliminating its influence from the resulting likelihood estimate.</p>
+                	
+                	<p>The discriminant function for minimum distance classification is the euclidean distance function:
+                	
+                	$$g_{k}(x) = (x - \bar{m}_{k})^{T}(x - \bar{m}_{k})$$
+                	
+                	</p>
+                	
+                	<p>The decision rule for minimum distance classification is defined as:
+                	
+                	$$x \implies \omega_{i} \text{ if } g_{i}(x)\lt g_{j}(x), \forall j \neq i$$
+                	
+                	</p>
+                	<h1 class="section-heading">Selection of Training Data</h1>
+                	<p>
+                	The selection of training data that accurately estimates the expected signature for a given class is extremely important in performing accurate classification. Several considerations must be made when attempting to estimate accurate training data from a multi-spectral image:
+                	
+                	<ol>
+                	<li>Sufficient separability between the spectral signatures of different classes.</li>
+                	<li>Unimodality of the histogram of the selected training data</li>
+                	</ol>
+                	
+                	When selecting training data, the distribution of each class can be explored by generating histograms for the training data, and the separability of each class can be explored by generating feature space plots for all of the training data.
+                	</p>
+                	
+                	<h1 class="section-heading">Classification using PCI Geomatica</h1>
+                	<p>
+                	</p>
+                	
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+
+    <!-- Footer -->
+   <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                        <li>
+                            <a href="https://www.linkedin.com/in/dennis-sherman-163638a3">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.youtube.com/channel/UCooV7bmnzqZkkgY3YEn6z6g">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-youtube fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/thegratefuldawg0520">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                    <p class="copyright text-muted">Copyright &copy; Your Website 2016</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Contact Form JavaScript -->
+    <script src="js/jqBootstrapValidation.js"></script>
+    <script src="js/contact_me.js"></script>
+
+    <!-- Theme JavaScript -->
+    <script src="js/clean-blog.min.js"></script>
+
+</body>
+
+</html>
