@@ -77,9 +77,9 @@ MathJax.Hub.Config({
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="post-heading">
-                        <h1>Supervised Classification</h1>
-                        <h2 class="subheading">Categorizing Land Coverage in Remotely Sensed Images</h2>
-                        <span class="meta">Posted by <a href="#">Dennis Sherman</a> on February 14, 2017</span>
+                        <h1>About</h1>
+                        <h2 class="subheading">Course Outline</h2>
+                        <span class="meta">Winter 2017</span>
                     </div>
                 </div>
             </div>
@@ -92,85 +92,15 @@ MathJax.Hub.Config({
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 
-                	<h1 class="section-heading">Introduction</h1>
-                	<p>This lab involves the use of Supervised Classification to categorize pixels in a remotely sensed image into different land coverage classes (e.g. roads, grasses, buildings, etc...). The lab is split into three different components:
+                	<p>The aim of this course is to build on the methods and techniques introduced in “Remote Sensing” 
+and 
+“Photogrammetry”; to examine digital data acquisition technologies and sophisticated image 
+processing techniques; and to analyse data for Geometrics Engineering, environmental and 
+geographical applications and research. At the end of the course, students s
+hould be capable of 
+advising on the best types of digital data, scales, and analysis procedures for studying specific 
+Geomatics Engineering/environmental/geographical problems.</p>
                 	
-                	<ol>
-                	<li>The selection of training data.</li>
-                	<li>Classification using PCI Geomatics</li>
-                	<li>Implementation of Classification software</li>
-                	</ol>
-                	
-                	</p>
-                	
-					<img src='img/yu.PNG' style="float: left; width: 48%; margin-right: 1%; margin-bottom: 0.5em;">
-                	<img src='img/yuClass.PNG' style="float: left; width: 48%; margin-right: 1%; margin-bottom: 0.5em;">
-                	
-                	<p style="clear: both;">
-					
-                	<h1 class="section-heading">Supervised Classification</h1>
-                	<p>Supervised classification involves the categorization of all pixels in an image into different classes given estimates of the probability distribution of each class. Given a multi-spectral image, the resulting estimates are multi-variate and are often referred to as the spectral signature of the class. Supervised classification, in contrast to unsupervised classification, splits the classification process into two distinct, mutually exclusive, phases:
-					
-					<img src='img/yu.PNG'>
-					
-                	<ol>
-                	<li><b>Training Data Selection:</b> Samples from each class are used to characterize the spectral signature by estimating the mean vector and covariance matrix. The selection of sample sites is performed by a person and requires careful selection in order to appropriately characterize the spectral signature of a given class, while maintaining sufficient separability between the spectra of different classes</li>
-					
-					<img src='img/yuTrain.PNG'>
-					
-                	<li><b>Classification:</b> The training data is then used to determine, on a pixel-wise basis, the best-fit class given some optimal decision rule. In this lab, the maximum likelihood and minimum distance decision rules will be explored.</li>
-					
-					<img src='img/yuClass.PNG'>
-					
-                	</ol>
-                	</p>
-                	
-                	<p>Maximum likelihood classification assumes the spectral signature of each class follows a normal distribution. The log-likelihood form of the multi-variate normal distribution, in addition to Bayes Rule, is used to generate a discriminant function that can be used along with a decision rule for classifying image pixels given an estimated spectral signature.</p>
-                	
-                	<p>The discriminant function for maximum likelihood classification is defined as:
-                	
-                	$$g_{k}(x) = -ln|C_{k}| - (x - \bar{m}_{k})^{T}C_{k}^{-1}(x - \bar{m}_{k})$$
-                	</p>
-                	
-                	<p>The decision rule for maximum likelihood classification is defined as:
-                	
-                	$$x \implies \omega_{i} \text{ if } g_{i}(x)>g_{j}(x), \forall j \neq i$$
-                	
-                	</p>
-                	
-                	<p>In contrast to maximum likelihood classification, minimum distance classification makes no assumptions regarding the second moment of each class. The descriminant function can be derived from the maximum likelihood discriminant function by assuming the covariance matrix for each spectra is equal to the identity matrix, eliminating its influence from the resulting likelihood estimate.</p>
-                	
-                	<p>The discriminant function for minimum distance classification is the euclidean distance function:
-                	
-                	$$g_{k}(x) = (x - \bar{m}_{k})^{T}(x - \bar{m}_{k})$$
-                	
-                	</p>
-                	
-                	<p>The decision rule for minimum distance classification is defined as:
-                	
-                	$$x \implies \omega_{i} \text{ if } g_{i}(x)\lt g_{j}(x), \forall j \neq i$$
-                	
-                	</p>
-                	<h1 class="section-heading">Selection of Training Data</h1>
-                	<p>
-                	The selection of training data that accurately estimates the expected signature for a given class is extremely important in performing accurate classification. Several considerations must be made when attempting to estimate accurate training data from a multi-spectral image:
-                	
-                	<ol>
-                	<li>Sufficient separability between the spectral signatures of different classes.</li>
-                	<li>Unimodality of the histogram of the selected training data</li>
-                	</ol>
-                	</p>
-					
-                	<p>When selecting training data, the distribution of each class can be explored by generating histograms for the training data.</p>
-					
-					<img src='img/BuildingHist.PNG' style="float: left; width: 48%; margin-right: 1%; margin-bottom: 0.5em;">
-                	<img src='img/VegHist.PNG' style="float: left; width: 48%; margin-right: 1%; margin-bottom: 0.5em;">
-                	
-                	<p style="clear: both;">
-					<p>The separability of each class can be explored by generating feature space plots for all of the training data.</p>
-                	
-					<img src='img/separability.png'>
-					                	
                 </div>
             </div>
         </div>
