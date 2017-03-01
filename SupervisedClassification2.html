@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>LE/ESSE 4630</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Theme CSS -->
+    <link href="css/clean-blog.min.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+	
+    <script type="text/javascript" async
+    	src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    Menu <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand" href="LabIndex.html">LE/ESSE 4630: Image Processing for Remote Sensing and Photogrammetry</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="LabIndex.html">Home</a>
+                    </li>
+                    <li>
+                        <a href="LabAbout.html">About</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header class="intro-header" style="background-image: url('img/header.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <h1>Supervised Classification</h1>
+                        <h2 class="subheading">Exploring Maximum Likelihood and Minimum Distance Classification</h2>
+                        <span class="meta">Posted by <a href="#">Dennis Sherman</a> on March 1, 2017</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Post Content -->
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                	<h1 class="section-heading">Introduction</h1>
+                	<p>In this lab an experiment will be conducted to explore how maximum likelihood and minimum distance classification perform in practice. Unlike previous labs which were focused on image based operations, in this lab we will generate 2D synthetic datasets in the feature-space domain in order to explore different stochastic properties of multi-variate datasets. These datasets will then be subjected to the supervised classification workflow:</p>
+                	
+                	<p>
+                	<ol>
+                	<li>Selection of Training Data</li>
+                	<li>Computation of Training Data Sample Statistics</li>
+                	<li>Classification using the selected Discriminant Function and Decision Rule</li>
+                	</ol>
+                	</p>
+                	
+                	<p>The value in the use of a synthetic dataset relates to two key elements: knowledge of the expected value of the population parameters for each class apriori; and the ability to model challenging datasets that can cause problems in the supervised classification process, the ability to test assumptions regarding the behavior of classifiers on these challenging datasets, and the ability to develop strategies to mitigate the risk of misclassification within these challenging datasets. An example of a challenging 2D dataset is shown in the figure below.</p>
+                	
+                	
+               <img src='img/separability2.jpg'>
+					 
+               	<p>In this lab we will simulate the following challenges within our synthetic datasets:</p>
+               	
+               	<p>
+               	<ol>
+               	<li>Non-Gaussianity</li>
+               	<li>Multi-Modality</li>
+               	<li>Elongated Gaussian Distribution</li>
+               	<li>Separability</li>
+               	</ol>
+               	</p>
+					
+                	<h1 class="section-heading">Creation of a Synthetic Dataset</h1>
+                	<p>In this lab we will implement software to conduct the experiment. The first step is the creation of the synthetic dataset. As discussed previously, we seek to explore several challenges within datasets that can simulate realistic data scenarios that can arise in the classification process.</p>
+                	
+                	<script src="https://gist.github.com/thegratefuldawg0520/216b6e78c535bb619e813d9fcae3f118.js"></script>
+                	
+                	<p>Each one of these sample datasets is generated by specifying the population parameters of the distribution and the number of elements in each population. In order to simulate a realistic data scenario involving image pixels, each class should have a different number of elements, with a minimum of 500 unique data points.</p>
+                	
+                	<h1 class="section-heading">Selection of Training Data</h1>
+                	
+                	<p>One benefit of conducting experiments on synthetically generated datasets is apriori knowledge of the population parameters and the form of the data's probability distribution. Given the supervised classification workflow, we must select a subset of our synthetic dataset that will act as the training data, and we will used the estimated parameters as inputs into our discriminant functions in order to classify the remaining subset of our synthetic dataset. In this lab we will use $\frac{2}{3}$ of the data generated for each class as the training data, and we will classify the remaining $\frac{1}{3}$ of the data. For each experiment, this process will be performed 3 times, varying which $\frac{2}{3}$ of the data are used as training data, and classifying the remaining $\frac{1}{3}$ of the data. This method is referred to as k-fold cross-validation, where k is the number of subsets the data is split into, in this case 3.</p>
+                	
+                	<h1 class="section-heading">Assessment of Classification Results</h1>
+					   <p>As with the previous lab, we will be classifying our datasets using both Minimum Distance and Maximum Likelihood discriminant functions. Therefore, we must compute both the mean vector and covariance matrix for each class. Once the training data has been computed we can use the mean vector and covariance matrix to classify the remaining $\frac{1}{3}$ of the data. Once again, given that we know the expected value of the class of the remaining $\frac{1}{3}$ of the data, we can perform error analysis on the results of classifying each fold of our dataset using the error rate:
+					   
+					   $$E_{i} = 1 - \frac{\text{# of correct classification}}{\text{# of data points}}$$
+					   </p>
+					   
+					   <p>We can then assess the total error rate as:
+					   
+					   $$E = \frac{1}{k}\sum_{i=1}^{k}E_{i}$$
+					   </p>
+					   
+					   <p>We can also generate a confusion matrix for the classification results. In the confusion matrix we use the expected value of the classification results (typically within the bounds of the training data regions where we have asserted the expected value apriori) to visualize the quality of the classification results. In the figure below class A has 50 elements, class B has 40 elements, and class C has 46 elements.</p>
+					   
+					   <img src='img/confusion.jpg'>
+					   
+					   <p>Each row of the confusion matrix shows which proportion of the classified data points, binned into one of the classes, actually corresponds to each of the classes. For instance, of the 39 data points classified as belong to class A, 35 of the data points belong to class A, 2 belong to class B and 2 belong to class C. Each column of the confusion matrix shows which proportion of the classified data points, belonging to a given class, were binned into the different classes. For instance, of the 50 data points known to belong to class A, 35 were classified as belonging to class A, 10 to class B and 5 to class C. It is important to recognize that numerous resources may represent the rows and columns of the confusion matrix opposite to the figure above, with no change to the displayed results.</p>
+					   
+					   <h1 class="section-heading">Conducting Experiments</h1>
+					   <p>We want to explore issues related to non-gaussianity, multi-modality, elongated gaussian distributions, and separability. For each experiment, we can use a select number of classes that simulate each of the individual data challenges. Additionally, experiments can be defined that combine these different data challenges to explore more complex data scenarios that are representative of realistic challenges faced when performing classification on imagery.</p>
+					   
+					   <p>For each experiment, the procedure is:</p>
+					   
+					   <p>
+					   <ol>
+					   <li>Assert your null hypothesis $h_{o}$, which corresponds to what you expect the results of the classification to be. </li>
+					   <li>Split each class into thirds, using $\frac{2}{3}$ for training and $\frac{1}{3}$ for classification.</li>
+					   <li>For all non-training data points in each class, compute the discriminant function and decision rule. Save the results in order to generate the confusion matrix and error rate.</li>
+					   <li>Repeat steps 2 and 3 for each fold in the dataset. Don't worry about different combinations of folds between classes, just split each class into thirds and conduct steps 2 and 3 a total of 3 times in order to classify all points in each class dataset</li>
+					   <li>Compute the confusion matrix and error rate for the classification results</li>
+					   <li>Evaluate whether the results of your experiment meet the null hypothesis you have asserted.</li>
+					   </ol>
+					   </p>
+					   
+					   <p>In this case the null hypothesis is what you expect to occur when attempting to classify the data given the challenges selected to explore in the given experiment. You are not evaluated on how valid your null hypothesis is, but it is to be used as a tool for asserting your personal expectations such that you are forced to think about the classification results if they do not match your personal expectation. It is up to you to design a minimum of 5 experiments, one for the case of classifying datasets that follow non-elongated gaussian distributions, and the remainder to explore the 4 data challenges mentioned above.</p>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+
+    <!-- Footer -->
+   <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                        <li>
+                            <a href="https://www.linkedin.com/in/dennis-sherman-163638a3">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.youtube.com/channel/UCooV7bmnzqZkkgY3YEn6z6g">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-youtube fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/thegratefuldawg0520">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                    <p class="copyright text-muted">Copyright &copy; Your Website 2016</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Contact Form JavaScript -->
+    <script src="js/jqBootstrapValidation.js"></script>
+    <script src="js/contact_me.js"></script>
+
+    <!-- Theme JavaScript -->
+    <script src="js/clean-blog.min.js"></script>
+
+</body>
+
+</html>
